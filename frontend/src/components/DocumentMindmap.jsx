@@ -1,4 +1,3 @@
-<<<<<<< HEAD:frontend/src/components/DocumentMindmap.jsx
 import { useRef, useState } from "react";
 import {
   Bell,
@@ -17,10 +16,6 @@ import {
   ShieldCheck,
   Users,
 } from "lucide-react";
-=======
-import { useState, useRef } from "react";
-import { Search, Eye, EyeOff, Maximize2, Minimize2 } from "lucide-react";
->>>>>>> main:src/components/DocumentMindmap.jsx
 import MindmapDetailPanel from "./MindmapDetailPanel";
 import { mindmapData } from "../data/mindmapData";
 

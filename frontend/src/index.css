@@ -41,24 +41,6 @@ body {
   box-sizing: border-box;
 }
 
-<<<<<<< HEAD:frontend/src/index.css
-button,
-a,
-input,
-select,
-textarea {
-  -webkit-tap-highlight-color: transparent;
-}
-
-button,
-a {
-  outline-color: #2563eb;
-  outline-offset: 3px;
-}
-
-::selection {
-  background: rgba(37, 99, 235, 0.18);
-=======
 @keyframes float-badge {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
@@ -84,5 +66,4 @@ a {
 
 .animate-slow-spin {
   animation: slow-spin 12s linear infinite;
->>>>>>> main:src/index.css
 }

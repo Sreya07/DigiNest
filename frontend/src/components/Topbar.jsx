@@ -69,18 +69,6 @@ export default function Topbar() {
           <LanguageSwitcher />
           <ElderModeToggle />
           <ThemeToggle />
-<<<<<<< HEAD:frontend/src/components/Topbar.jsx
-          <button className="hidden h-10 w-10 place-items-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm sm:grid dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" type="button" aria-label="Notifications">
-            <Bell size={18} />
-          </button>
-          <div className="grid h-10 w-10 place-items-center rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950">
-            <UserRound size={18} />
-          </div>
-        </div>
-      </div>
-      <nav className="mx-auto mt-3 flex max-w-[1440px] gap-2 overflow-x-auto pb-1 lg:hidden">
-        {mobileNav.map(([to, label]) => (
-=======
           <button className="hidden h-10 w-10 place-items-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm sm:grid dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" type="button" aria-label={t("notifications")}>
             <Bell size={18} />
           </button>
@@ -120,7 +108,6 @@ export default function Topbar() {
       </div>
       <nav className="mt-3 flex gap-2 overflow-x-auto pb-1 lg:hidden">
         {mobileNav.map(([to, labelKey]) => (
->>>>>>> main:src/components/Topbar.jsx
           <NavLink
             key={to}
             to={to}

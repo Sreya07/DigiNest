@@ -1,12 +1,8 @@
 import { useState } from "react";
-<<<<<<< HEAD:frontend/src/pages/Settings.jsx
-import { Lock, Moon, Palette, Sun } from "lucide-react";
-=======
 import { Lock, LogOut, Moon, Palette, Sun, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
->>>>>>> main:src/pages/Settings.jsx
 
 export default function Settings() {
   const { logout, user } = useAuth();
@@ -36,7 +32,6 @@ export default function Settings() {
 
   return (
     <div className="space-y-6">
-<<<<<<< HEAD:frontend/src/pages/Settings.jsx
       <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <h1 className="text-3xl font-bold text-slate-950 dark:text-white">Settings & Preferences</h1>
         <p className="mt-1 text-slate-500 dark:text-slate-400">Customize your DigiNest experience with appearance, language, and privacy controls.</p>
@@ -54,16 +49,6 @@ export default function Settings() {
         <div className="p-6 space-y-6">
           {/* Language */}
           <SettingGroup title="Language" description="Choose your preferred language">
-=======
-      <div>
-        <h1 className="text-3xl font-bold text-slate-950 dark:text-white">{t("settingsTitle")}</h1>
-        <p className="mt-1 text-slate-500 dark:text-slate-400">{t("settingsDescription")}</p>
-      </div>
-
-      <SectionHeader icon={Palette} title={t("appearanceTheme")} tone="blue">
-        <div className="space-y-6 p-6">
-          <SettingGroup title={t("language")} description={t("languageDescription")}>
->>>>>>> main:src/pages/Settings.jsx
             <div className="grid grid-cols-3 gap-3">
               {languages.map((lang) => (
                 <button
@@ -162,23 +147,10 @@ export default function Settings() {
             </div>
           </SettingGroup>
         </div>
-      </SectionHeader>
+      </div>
 
-<<<<<<< HEAD:frontend/src/pages/Settings.jsx
-      {/* Privacy & Security Section */}
-      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
-        <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/50 dark:to-green-950/50 border-b border-slate-200 dark:border-slate-700 p-6">
-          <h2 className="text-xl font-bold text-slate-950 dark:text-white flex items-center gap-3">
-            <Lock size={24} className="text-emerald-600" />
-            Privacy & Security
-          </h2>
-        </div>
-
-        <div className="p-6 space-y-4">
-=======
       <SectionHeader icon={Lock} title={t("privacySecurity")} tone="emerald">
         <div className="space-y-4 p-6">
->>>>>>> main:src/pages/Settings.jsx
           <Toggle
             label={t("requireAiConsent")}
             checked={settings.aiConsent}
@@ -200,21 +172,6 @@ export default function Settings() {
         </div>
       </SectionHeader>
 
-<<<<<<< HEAD:frontend/src/pages/Settings.jsx
-      <div className="rounded-lg border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-900">
-        <h2 className="text-lg font-bold text-slate-950 dark:text-white mb-4">Color Psychology Reference</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            { color: "bg-blue-600", name: "Identity", desc: "Trust, strength" },
-            { color: "bg-emerald-500", name: "Health", desc: "Safety, wellness" },
-            { color: "bg-amber-400", name: "Reminders", desc: "Attention, clarity" },
-            { color: "bg-rose-500", name: "Family", desc: "Care, connection" },
-            { color: "bg-violet-600", name: "Intelligence", desc: "Insights, AI" },
-            { color: "bg-red-600", name: "Risk", desc: "Urgency, action" },
-          ].map((item) => (
-            <div key={item.name} className="flex items-start gap-3 p-4 rounded-lg bg-slate-50 dark:bg-slate-800">
-              <div className={`mt-1 h-4 w-4 rounded-full ${item.color}`} />
-=======
       <SectionHeader icon={Users} title={t("sessionAccount")} tone="red">
         <div className="space-y-4 p-6">
           <div className="rounded-lg bg-slate-50 p-4 dark:bg-slate-800">
@@ -269,7 +226,6 @@ export default function Settings() {
               <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white text-sm font-bold text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
                 {item.marker}
               </div>
->>>>>>> main:src/pages/Settings.jsx
               <div>
                 <p className="font-semibold text-slate-900 dark:text-white">{item.name}</p>
                 <p className="text-xs text-slate-600 dark:text-slate-400">{item.desc}</p>
@@ -279,21 +235,12 @@ export default function Settings() {
         </div>
       </div>
 
-<<<<<<< HEAD:frontend/src/pages/Settings.jsx
-      <div className="rounded-lg border border-violet-200 bg-violet-50 p-6 dark:border-violet-800 dark:bg-violet-950/30">
-        <h3 className="font-bold text-violet-900 dark:text-violet-100 mb-3">Need Help?</h3>
-        <ul className="space-y-2 text-sm text-purple-800 dark:text-purple-200">
-          <li>Check our documentation for detailed guides.</li>
-          <li>Contact support at support@diginest.io.</li>
-          <li>Join our community forum for tips and tricks.</li>
-=======
       <div className="rounded-2xl border border-purple-200 bg-gradient-to-br from-purple-50 to-fuchsia-50 p-6 dark:border-purple-800 dark:from-purple-950/30 dark:to-fuchsia-950/30">
         <h3 className="mb-3 font-bold text-purple-900 dark:text-purple-100">{t("needHelp")}</h3>
         <ul className="space-y-2 text-sm text-purple-800 dark:text-purple-200">
           <li>• {t("helpDocs")}</li>
           <li>• {t("helpSupport")}</li>
           <li>• {t("helpCommunity")}</li>
->>>>>>> main:src/pages/Settings.jsx
         </ul>
       </div>
     </div>

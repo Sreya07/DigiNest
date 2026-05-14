@@ -38,21 +38,12 @@ export default function Sidebar() {
           <Landmark size={22} />
         </div>
         <div>
-<<<<<<< HEAD:frontend/src/components/Sidebar.jsx
           <h1 className="text-lg font-bold text-slate-950 dark:text-white">DigiNest</h1>
           <p className="text-xs text-slate-500 dark:text-slate-400">Citizen document vault</p>
         </div>
       </div>
       <nav className="mt-6 space-y-1">
         {navItems.map(({ to, label, icon: Icon }) => (
-=======
-          <h1 className="text-xl font-bold text-slate-950 dark:text-white">{t("appName")}</h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">{t("appSubtitle")}</p>
-        </div>
-      </div>
-      <nav className="mt-8 space-y-1">
-        {navItems.map(({ to, labelKey, icon: Icon }) => (
->>>>>>> main:src/components/Sidebar.jsx
           <NavLink
             key={to}
             to={to}
@@ -73,11 +64,7 @@ export default function Sidebar() {
         <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white">
           <Clock3 size={17} /> {t("privacyPulse")}
         </div>
-<<<<<<< HEAD:frontend/src/components/Sidebar.jsx
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">3 active shares. All links expire automatically.</p>
-=======
         <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{t("privacyPulseText")}</p>
->>>>>>> main:src/components/Sidebar.jsx
       </div>
     </aside>
   );
