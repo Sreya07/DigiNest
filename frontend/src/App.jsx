@@ -8,6 +8,7 @@ import AddDocument from "./pages/AddDocument";
 import AddLifeEvent from "./pages/AddLifeEvent";
 import AccessHistory from "./pages/AccessHistory";
 import ConsentRequests from "./pages/ConsentRequests";
+import CreateRequest from "./pages/CreateRequest";
 import Dashboard from "./pages/Dashboard";
 import DocumentDetails from "./pages/DocumentDetails";
 import Documents from "./pages/Documents";
@@ -46,6 +47,7 @@ export default function App() {
                 <Route path="/share/:id" element={<ShareDocument />} />
                 <Route path="/mindmap" element={<DocumentMindmapPage />} />
                 <Route path="/consents" element={<ConsentRequests />} />
+                <Route path="/requests/new" element={<CreateRequest />} />
                 <Route path="/history" element={<AccessHistory />} />
                 <Route path="/life-events" element={<LifeEvents />} />
                 <Route path="/life-events/add" element={<AddLifeEvent />} />
