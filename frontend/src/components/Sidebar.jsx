@@ -13,21 +13,24 @@ import {
   MapPin,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext";
 
 const navItems = [
-  { to: "/dashboard", label: "Dashboard", icon: Home },
-  { to: "/documents", label: "Documents", icon: FileText },
-  { to: "/mindmap", label: "Document Mindmap", icon: MapPin },
-  { to: "/consents", label: "Consent", icon: ShieldCheck },
-  { to: "/history", label: "History", icon: History },
-  { to: "/life-events", label: "Life Events", icon: HeartHandshake },
-  { to: "/family", label: "Family", icon: Users },
-  { to: "/reminders", label: "Reminders", icon: Bell },
-  { to: "/life-graph", label: "Life Graph", icon: GitBranch },
-  { to: "/settings", label: "Settings", icon: Settings },
+  { to: "/dashboard", labelKey: "dashboard", icon: Home },
+  { to: "/documents", labelKey: "documents", icon: FileText },
+  { to: "/mindmap", labelKey: "documentMindmap", icon: MapPin },
+  { to: "/consents", labelKey: "consent", icon: ShieldCheck },
+  { to: "/history", labelKey: "history", icon: History },
+  { to: "/life-events", labelKey: "lifeEvents", icon: HeartHandshake },
+  { to: "/family", labelKey: "family", icon: Users },
+  { to: "/reminders", labelKey: "reminders", icon: Bell },
+  { to: "/life-graph", labelKey: "lifeGraph", icon: GitBranch },
+  { to: "/settings", labelKey: "settings", icon: Settings },
 ];
 
 export default function Sidebar() {
+  const { t } = useLanguage();
+
   return (
     <aside className="hidden h-screen w-64 shrink-0 border-r border-slate-200 bg-white p-4 lg:sticky lg:top-0 lg:block dark:border-slate-800 dark:bg-slate-950">
       <div className="flex items-center gap-3 rounded-lg px-2 py-2">
@@ -35,12 +38,21 @@ export default function Sidebar() {
           <Landmark size={22} />
         </div>
         <div>
+<<<<<<< HEAD:frontend/src/components/Sidebar.jsx
           <h1 className="text-lg font-bold text-slate-950 dark:text-white">DigiNest</h1>
           <p className="text-xs text-slate-500 dark:text-slate-400">Citizen document vault</p>
         </div>
       </div>
       <nav className="mt-6 space-y-1">
         {navItems.map(({ to, label, icon: Icon }) => (
+=======
+          <h1 className="text-xl font-bold text-slate-950 dark:text-white">{t("appName")}</h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{t("appSubtitle")}</p>
+        </div>
+      </div>
+      <nav className="mt-8 space-y-1">
+        {navItems.map(({ to, labelKey, icon: Icon }) => (
+>>>>>>> main:src/components/Sidebar.jsx
           <NavLink
             key={to}
             to={to}
@@ -53,15 +65,19 @@ export default function Sidebar() {
             }
           >
             <Icon size={18} />
-            {label}
+            {t(labelKey)}
           </NavLink>
         ))}
       </nav>
       <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
         <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-white">
-          <Clock3 size={17} /> Privacy pulse
+          <Clock3 size={17} /> {t("privacyPulse")}
         </div>
+<<<<<<< HEAD:frontend/src/components/Sidebar.jsx
         <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">3 active shares. All links expire automatically.</p>
+=======
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{t("privacyPulseText")}</p>
+>>>>>>> main:src/components/Sidebar.jsx
       </div>
     </aside>
   );

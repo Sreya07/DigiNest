@@ -1,5 +1,10 @@
+<<<<<<< HEAD:frontend/src/pages/ConsentRequests.jsx
 import { Check, Clock, SlidersHorizontal, X } from "lucide-react";
 import { useEffect, useState } from "react";
+=======
+import { Check, SlidersHorizontal, X, Clock } from "lucide-react";
+import { useState } from "react";
+>>>>>>> main:src/pages/ConsentRequests.jsx
 import EmotionCard from "../components/EmotionCard";
 import ColorBadge from "../components/ColorBadge";
 import PrivacyMeter from "../components/PrivacyMeter";
