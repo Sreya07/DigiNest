@@ -1,136 +1,116 @@
-import { Check, SlidersHorizontal, X, AlertTriangle, Clock } from "lucide-react";
-import { useState } from "react";
+import { Check, SlidersHorizontal, X, AlertTriangle, Clock, Loader2, AlertCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 import EmotionCard from "../components/EmotionCard";
 import ColorBadge from "../components/ColorBadge";
 import PrivacyMeter from "../components/PrivacyMeter";
-import { consentRequests } from "../data/mockData";
+import { consentsAPI } from "../services/api";
 
 export default function ConsentRequests() {
-  const [requests, setRequests] = useState(consentRequests);
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  function updateStatus(id, status) {
-    setRequests((items) => items.map((item) => (item.id === id ? { ...item, status } : item)));
+  useEffect(() => { fetchConsents(); }, []);
+
+  async function fetchConsents() {
+    setLoading(true); setError("");
+    try {
+      const { data } = await consentsAPI.list();
+      setRequests(data.data);
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to load consent requests.");
+    } finally { setLoading(false); }
   }
 
-  const pending = requests.filter(r => r.status === "Pending");
-  const approved = requests.filter(r => r.status === "Approved");
-  const total = requests.length;
+  async function updateStatus(id, status) {
+    try {
+      const { data } = await consentsAPI.updateStatus(id, status);
+      setRequests((items) => items.map((item) => item._id === id ? data.data : item));
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to update status.");
+    }
+  }
 
-  const getSensitivityRisk = (sensitivity) => {
-    return sensitivity === "High" ? 75 : sensitivity === "Medium" ? 45 : 20;
-  };
+  const pending = requests.filter((r) => r.status === "Pending");
+  const approved = requests.filter((r) => r.status === "Approved");
+
+  const getSensitivityRisk = (s) => (s === "High" ? 75 : s === "Medium" ? 45 : 20);
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-slate-950 dark:text-white">Consent Requests</h1>
-        <p className="mt-1 text-slate-500 dark:text-slate-400">Review, approve, or narrow data access requests. You control which fields get shared.</p>
+        <p className="mt-1 text-slate-500 dark:text-slate-400">Review, approve, or narrow data access requests.</p>
       </div>
 
-      {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <EmotionCard
-          title="Pending Review"
-          description={`${pending.length} await your decision`}
-          emotion="reminder"
-          icon={Clock}
-        >
+        <EmotionCard title="Pending Review" description={`${pending.length} await your decision`} emotion="reminder" icon={Clock}>
           <p className="text-3xl font-bold">{pending.length}</p>
         </EmotionCard>
-        <EmotionCard
-          title="Active Access"
-          description={`${approved.length} approved access`}
-          emotion="trust"
-          icon={Check}
-        >
+        <EmotionCard title="Active Access" description={`${approved.length} approved`} emotion="trust" icon={Check}>
           <p className="text-3xl font-bold">{approved.length}</p>
         </EmotionCard>
-        <EmotionCard
-          title="Total Requests"
-          description={`${total} all-time requests`}
-          emotion="professional"
-        >
-          <p className="text-3xl font-bold">{total}</p>
+        <EmotionCard title="Total Requests" description={`${requests.length} all-time`} emotion="professional">
+          <p className="text-3xl font-bold">{requests.length}</p>
         </EmotionCard>
       </div>
 
-      {/* Requests Grid */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {requests.map((request) => {
-          const riskLevel = getSensitivityRisk(request.sensitivity);
-          const statusColor = getStatusColor(request.status);
+      {error && (
+        <div className="flex items-center gap-2 rounded-xl bg-red-50 p-4 text-red-700 dark:bg-red-950 dark:text-red-300">
+          <AlertCircle size={18} /> {error}
+        </div>
+      )}
 
-          return (
-            <div
-              key={request.id}
-              className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden shadow-sm hover:shadow-md transition"
-            >
-              {/* Header Bar with Emotion Color */}
-              <div className={`bg-gradient-to-r ${statusColor.gradient} text-white p-5 flex items-start justify-between`}>
-                <div className="flex-1">
-                  <h2 className="text-lg font-bold">{request.requester}</h2>
-                  <p className="text-sm opacity-90 mt-1">{request.purpose}</p>
+      {loading ? (
+        <div className="flex justify-center py-16"><Loader2 size={36} className="animate-spin text-indigo-600" /></div>
+      ) : (
+        <div className="grid gap-6 lg:grid-cols-2">
+          {requests.map((request) => {
+            const riskLevel = getSensitivityRisk(request.sensitivity);
+            const statusColor = getStatusColor(request.status);
+            return (
+              <div key={request._id} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden shadow-sm hover:shadow-md transition">
+                <div className={`bg-gradient-to-r ${statusColor.gradient} text-white p-5 flex items-start justify-between`}>
+                  <div className="flex-1">
+                    <h2 className="text-lg font-bold">{request.requester}</h2>
+                    <p className="text-sm opacity-90 mt-1">{request.purpose}</p>
+                  </div>
+                  <ColorBadge status={request.status === "Approved" ? "verified" : request.status === "Pending" ? "pending" : "disabled"} size="sm" />
                 </div>
-                <ColorBadge
-                  status={
-                    request.status === "Approved" ? "verified" :
-                    request.status === "Pending" ? "pending" :
-                    "disabled"
-                  }
-                  size="sm"
-                  className="text-white"
-                />
-              </div>
-
-              {/* Content */}
-              <div className="p-5 space-y-4">
-                {/* Privacy Risk Meter */}
-                <PrivacyMeter
-                  riskLevel={riskLevel}
-                  title="Data Risk Level"
-                  description={`${request.sensitivity} sensitivity - ${request.duration} duration`}
-                />
-
-                {/* Details Grid */}
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <Info label="Document" value={request.document} />
-                  <Info label="Duration" value={request.duration} />
-                  <div className="col-span-2">
-                    <Info label="Fields Requested" value={request.fields.join(", ")} />
+                <div className="p-5 space-y-4">
+                  <PrivacyMeter riskLevel={riskLevel} title="Data Risk Level" description={`${request.sensitivity} sensitivity — ${request.duration}`} />
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <Info label="Document" value={request.document} />
+                    <Info label="Duration" value={request.duration} />
+                    <div className="col-span-2"><Info label="Fields Requested" value={(request.fields || []).join(", ")} /></div>
+                  </div>
+                  <div className="flex flex-wrap gap-2 pt-3">
+                    <button onClick={() => updateStatus(request._id, "Approved")} disabled={request.status === "Approved"}
+                      className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-emerald-500 to-green-400 hover:from-emerald-600 hover:to-green-500 disabled:opacity-50 px-4 py-2 font-medium text-white transition">
+                      <Check size={16} /> Approve
+                    </button>
+                    <button onClick={() => updateStatus(request._id, "Rejected")} disabled={request.status === "Rejected"}
+                      className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-red-600 to-rose-500 hover:from-red-700 disabled:opacity-50 px-4 py-2 font-medium text-white transition">
+                      <X size={16} /> Reject
+                    </button>
+                    <button onClick={() => updateStatus(request._id, "Modified")}
+                      className="inline-flex items-center gap-2 rounded-lg bg-blue-50 dark:bg-blue-950 hover:bg-blue-100 px-4 py-2 font-medium text-blue-700 dark:text-blue-200 transition">
+                      <SlidersHorizontal size={16} /> Modify
+                    </button>
                   </div>
                 </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-2 pt-3">
-                  <button
-                    onClick={() => updateStatus(request.id, "Approved")}
-                    disabled={request.status === "Approved"}
-                    className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-emerald-500 to-green-400 hover:from-emerald-600 hover:to-green-500 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 font-medium text-white transition"
-                  >
-                    <Check size={16} /> Approve
-                  </button>
-                  <button
-                    onClick={() => updateStatus(request.id, "Rejected")}
-                    disabled={request.status === "Rejected"}
-                    className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-red-600 to-rose-500 hover:from-red-700 hover:to-rose-600 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 font-medium text-white transition"
-                  >
-                    <X size={16} /> Reject
-                  </button>
-                  <button
-                    onClick={() => updateStatus(request.id, "Modified")}
-                    className="inline-flex items-center gap-2 rounded-lg bg-blue-50 dark:bg-blue-950 hover:bg-blue-100 dark:hover:bg-blue-900 px-4 py-2 font-medium text-blue-700 dark:text-blue-200 transition"
-                  >
-                    <SlidersHorizontal size={16} /> Modify
-                  </button>
-                </div>
               </div>
+            );
+          })}
+          {requests.length === 0 && (
+            <div className="col-span-full rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 p-12 text-center">
+              <AlertTriangle size={48} className="mx-auto mb-4 text-slate-400" />
+              <p className="text-slate-600 dark:text-slate-400">No consent requests yet.</p>
             </div>
-          );
-        })}
-      </div>
+          )}
+        </div>
+      )}
 
-      {/* Info Section */}
       <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 border border-blue-200 dark:border-blue-800 p-6">
         <h3 className="font-bold text-blue-900 dark:text-blue-100 mb-3">🛡️ Consent Best Practices</h3>
         <ul className="space-y-2 text-sm text-blue-800 dark:text-blue-200">
@@ -148,17 +128,17 @@ function Info({ label, value }) {
   return (
     <div className="rounded-lg bg-slate-50 dark:bg-slate-800 p-3">
       <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">{label}</p>
-      <p className="mt-1 font-medium text-slate-900 dark:text-white">{value}</p>
+      <p className="mt-1 font-medium text-slate-900 dark:text-white">{value || "—"}</p>
     </div>
   );
 }
 
 function getStatusColor(status) {
   return {
-    Pending: { gradient: "from-yellow-400 to-amber-400", dot: "bg-yellow-500" },
-    Approved: { gradient: "from-emerald-500 to-green-400", dot: "bg-emerald-500" },
-    Rejected: { gradient: "from-red-600 to-rose-500", dot: "bg-red-500" },
-    Modified: { gradient: "from-blue-600 to-cyan-500", dot: "bg-blue-500" },
-    Expired: { gradient: "from-slate-600 to-gray-500", dot: "bg-slate-500" },
-  }[status] || { gradient: "from-slate-600 to-gray-500", dot: "bg-slate-500" };
+    Pending: { gradient: "from-yellow-400 to-amber-400" },
+    Approved: { gradient: "from-emerald-500 to-green-400" },
+    Rejected: { gradient: "from-red-600 to-rose-500" },
+    Modified: { gradient: "from-blue-600 to-cyan-500" },
+    Expired: { gradient: "from-slate-600 to-gray-500" },
+  }[status] || { gradient: "from-slate-600 to-gray-500" };
 }

@@ -1,18 +1,23 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+// Auth helpers — uses JWT stored in localStorage (no Firebase)
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID",
-};
+export function getToken() {
+  return localStorage.getItem("diginest_token");
+}
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+export function getUser() {
+  try {
+    return JSON.parse(localStorage.getItem("diginest_user") || "null");
+  } catch {
+    return null;
+  }
+}
+
+export function isLoggedIn() {
+  return !!getToken();
+}
+
+export function logout() {
+  localStorage.removeItem("diginest_token");
+  localStorage.removeItem("diginest_user");
+  window.location.href = "/login";
+}
