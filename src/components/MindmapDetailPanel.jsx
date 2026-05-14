@@ -1,5 +1,4 @@
-import { X, BookOpen, Fingerprint, Heart, Users, CreditCard, Car, Home, ShieldCheck, Bell, Copy } from "lucide-react";
-import EmotionCard from "./EmotionCard";
+import { X, BookOpen, Fingerprint, Heart, Users, CreditCard, Car, Home, ShieldCheck, Bell } from "lucide-react";
 import ColorBadge from "./ColorBadge";
 
 const iconMap = {

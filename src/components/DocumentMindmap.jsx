@@ -1,8 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Search, Eye, EyeOff, Maximize2, Minimize2 } from "lucide-react";
 import MindmapDetailPanel from "./MindmapDetailPanel";
 import { mindmapData } from "../data/mindmapData";
-import EmotionCard from "./EmotionCard";
 
 const iconMap = {
   Fingerprint: "👤",
@@ -17,12 +16,10 @@ const iconMap = {
 };
 
 export default function DocumentMindmap({ documents }) {
-  const canvasRef = useRef(null);
   const [selectedBranch, setSelectedBranch] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSensitiveFields, setShowSensitiveFields] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [expandedBranches, setExpandedBranches] = useState(new Set());
 
   const containerRef = useRef(null);
   const svgRef = useRef(null);
@@ -54,16 +51,6 @@ export default function DocumentMindmap({ documents }) {
     branch.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
     branch.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const toggleBranchExpand = (branchId) => {
-    const newSet = new Set(expandedBranches);
-    if (newSet.has(branchId)) {
-      newSet.delete(branchId);
-    } else {
-      newSet.add(branchId);
-    }
-    setExpandedBranches(newSet);
-  };
 
   return (
     <div className="space-y-6">

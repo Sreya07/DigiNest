@@ -1,4 +1,4 @@
-import { Lock, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
 
 export default function PrivacyMeter({ riskLevel = 50, title = "Privacy Risk", description }) {
   // Determine color and icon based on risk level

@@ -1,4 +1,4 @@
-import { Check, SlidersHorizontal, X, AlertTriangle, Clock } from "lucide-react";
+import { Check, SlidersHorizontal, X, Clock } from "lucide-react";
 import { useState } from "react";
 import EmotionCard from "../components/EmotionCard";
 import ColorBadge from "../components/ColorBadge";
