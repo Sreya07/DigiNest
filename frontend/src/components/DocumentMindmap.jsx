@@ -124,9 +124,8 @@ export default function DocumentMindmap({ documents }) {
       {/* Mindmap Visualization */}
       <div
         ref={containerRef}
-        className={`relative overflow-hidden rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900 ${
-          isExpanded ? "h-[900px]" : "h-[600px]"
-        }`}
+        className={`relative overflow-hidden rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900 ${isExpanded ? "h-[900px]" : "h-[600px]"
+          }`}
       >
         {/* SVG for connection lines */}
         <svg
@@ -188,11 +187,10 @@ export default function DocumentMindmap({ documents }) {
             >
               {/* Node Circle */}
               <div
-                className={`flex h-24 w-24 flex-col items-center justify-center rounded-full shadow-lg transition-all duration-300 ${
-                  isSelected
+                className={`flex h-24 w-24 flex-col items-center justify-center rounded-full shadow-lg transition-all duration-300 ${isSelected
                     ? `bg-gradient-to-br ${branch.color} text-white shadow-2xl scale-125`
                     : `bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-600 group-hover:scale-110 group-hover:shadow-xl`
-                }`}
+                  }`}
               >
                 <Icon size={26} className="mb-1" />
                 <div className="text-xs font-bold text-center">{branch.label}</div>
@@ -228,9 +226,8 @@ export default function DocumentMindmap({ documents }) {
           <div
             key={branch.id}
             onClick={() => setSelectedBranch(branch)}
-            className={`group cursor-pointer rounded-lg bg-gradient-to-br ${branch.color} p-6 text-white transition-all duration-300 hover:shadow-xl ${
-              selectedBranch?.id === branch.id ? "ring-4 ring-offset-2 ring-blue-400" : ""
-            }`}
+            className={`group cursor-pointer rounded-lg bg-gradient-to-br ${branch.color} p-6 text-white transition-all duration-300 hover:shadow-xl ${selectedBranch?.id === branch.id ? "ring-4 ring-offset-2 ring-blue-400" : ""
+              }`}
           >
             <div className="flex items-start justify-between mb-3">
               {(() => {

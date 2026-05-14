@@ -52,11 +52,10 @@ export default function LifeEvents() {
           <button
             key={filter.id}
             onClick={() => setActiveFilter(filter.id)}
-            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 ${
-              activeFilter === filter.id 
-                ? "bg-slate-800 text-white dark:bg-white dark:text-slate-900 shadow-md" 
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 ${activeFilter === filter.id
+                ? "bg-slate-800 text-white dark:bg-white dark:text-slate-900 shadow-md"
                 : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-800 dark:hover:bg-slate-800"
-            }`}
+              }`}
           >
             {filter.label}
           </button>

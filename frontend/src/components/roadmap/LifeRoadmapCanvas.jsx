@@ -14,7 +14,7 @@ export default function LifeRoadmapCanvas({ milestones }) {
 
   const [hoveredMilestone, setHoveredMilestone] = useState(null);
   const [selectedMilestone, setSelectedMilestone] = useState(null);
-  
+
   // Roadmap Dimensions
   const step = 600;
   const canvasWidth = Math.max(1200, (milestones.length + 1) * 300);
@@ -24,11 +24,11 @@ export default function LifeRoadmapCanvas({ milestones }) {
   const getMilestonePosition = (index, total) => {
     // Distribute them evenly along the x-axis
     const x = 300 + index * 300;
-    
+
     const midY = canvasHeight / 2;
     const amplitude = canvasHeight * 0.35;
-    const visualAmplitude = amplitude * 1.1; 
-    
+    const visualAmplitude = amplitude * 1.1;
+
     // Base y exactly on the curve
     const baseY = midY - visualAmplitude * Math.sin((x / step) * Math.PI * 2);
 
@@ -68,7 +68,7 @@ export default function LifeRoadmapCanvas({ milestones }) {
 
   return (
     <div className="relative w-full h-full min-h-[620px] overflow-hidden rounded-[2rem] shadow-inner bg-gradient-to-br from-orange-50 via-emerald-50/50 to-indigo-50 dark:from-slate-950 dark:via-emerald-950/20 dark:to-indigo-950 transition-colors duration-500">
-      
+
       {/* Decorative background clouds / hills */}
       <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20">
         <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-pink-300/30 dark:bg-purple-900/40 rounded-full blur-[100px] transform -translate-x-1/2 -translate-y-1/2"></div>
@@ -90,7 +90,7 @@ export default function LifeRoadmapCanvas({ milestones }) {
       </div>
 
       {/* Canvas Area */}
-      <div 
+      <div
         ref={containerRef}
         className="w-full h-full cursor-grab active:cursor-grabbing relative z-10"
         onMouseDown={handleMouseDown}
@@ -99,7 +99,7 @@ export default function LifeRoadmapCanvas({ milestones }) {
         onMouseLeave={handleMouseUp}
         onWheel={handleWheel}
       >
-        <div 
+        <div
           className="origin-top-left transition-transform duration-75"
           style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
@@ -108,7 +108,7 @@ export default function LifeRoadmapCanvas({ milestones }) {
           }}
         >
           <RoadPath width={canvasWidth} height={canvasHeight} />
-          
+
           {milestones.length === 0 ? (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none no-drag">
               <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-8 py-6 rounded-3xl border border-white/20 dark:border-slate-800 shadow-xl max-w-sm text-center">
@@ -122,10 +122,10 @@ export default function LifeRoadmapCanvas({ milestones }) {
           ) : (
             milestones.map((milestone, index) => {
               const { x, y } = getMilestonePosition(index, milestones.length);
-              
+
               return (
                 <div key={milestone.id}>
-                  <MilestoneNode 
+                  <MilestoneNode
                     milestone={milestone}
                     x={x}
                     y={y}
@@ -134,10 +134,10 @@ export default function LifeRoadmapCanvas({ milestones }) {
                     onMouseLeave={() => setHoveredMilestone(null)}
                   />
                   {hoveredMilestone?.milestone?.id === milestone.id && (
-                    <MilestoneTooltip 
-                      milestone={milestone} 
-                      x={x} 
-                      y={y} 
+                    <MilestoneTooltip
+                      milestone={milestone}
+                      x={x}
+                      y={y}
                     />
                   )}
                 </div>
@@ -149,9 +149,9 @@ export default function LifeRoadmapCanvas({ milestones }) {
 
       {/* Detail Panel overlay */}
       <div className="no-drag">
-        <MilestoneDetailPanel 
-          milestone={selectedMilestone} 
-          onClose={() => setSelectedMilestone(null)} 
+        <MilestoneDetailPanel
+          milestone={selectedMilestone}
+          onClose={() => setSelectedMilestone(null)}
         />
       </div>
     </div>

@@ -43,7 +43,7 @@ export default function Sidebar() {
         </div>
       </div>
       <nav className="mt-6 space-y-1">
-        {navItems.map(({ to, label, icon: Icon }) => (
+        {navItems.map(({ to, labelKey, icon: Icon }) => (
           <NavLink
             key={to}
             to={to}

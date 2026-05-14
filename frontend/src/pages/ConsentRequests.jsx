@@ -1,5 +1,5 @@
-import { Check, SlidersHorizontal, X, Clock, Plus, Send, FileText } from "lucide-react";
-import { useState } from "react";
+import { Check, SlidersHorizontal, X, Clock, Plus, Send, FileText, Upload, ShieldEllipsis, Loader2, FileCheck } from "lucide-react";
+import { useState, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import EmotionCard from "../components/EmotionCard";
 import ColorBadge from "../components/ColorBadge";
@@ -11,9 +11,9 @@ export default function ConsentRequests() {
   const [searchParams] = useSearchParams();
   const initialTab = searchParams.get("tab") === "sent" ? "sent" : "received";
   const [activeTab, setActiveTab] = useState(initialTab);
-  
+
   const [requests, setRequests] = useState(consentRequests);
-  const [sentRequests] = useState([
+  const [sentRequests, setSentRequests] = useState([
     {
       id: 101,
       targetUser: "Meera Sharma",
@@ -33,8 +33,65 @@ export default function ConsentRequests() {
       duration: "1 month",
       sensitivity: "High",
       status: "Approved",
+      maskedDocumentUrl: "/dummy-url.pdf"
     }
   ]);
+
+  const [maskingStatus, setMaskingStatus] = useState({});
+  const [uploadedDocument, setUploadedDocument] = useState({});
+  const fileInputRef = useRef(null);
+  const [activeUploadId, setActiveUploadId] = useState(null);
+
+  const handleAutoMask = async (request) => {
+    setMaskingStatus(prev => ({ ...prev, [request.id]: 'loading' }));
+    try {
+      const res = await fetch("http://localhost:5000/api/documents/mask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ documentId: request.document, requestedFields: request.fields })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUploadedDocument(prev => ({ ...prev, [request.id]: data.maskedDocumentUrl }));
+        setMaskingStatus(prev => ({ ...prev, [request.id]: 'success' }));
+      }
+    } catch (err) {
+      console.error(err);
+      setMaskingStatus(prev => ({ ...prev, [request.id]: 'idle' }));
+    }
+  };
+
+  const handleUploadClick = (id) => {
+    setActiveUploadId(id);
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !activeUploadId) return;
+
+    setMaskingStatus(prev => ({ ...prev, [activeUploadId]: 'loading' }));
+    const formData = new FormData();
+    formData.append('document', file);
+
+    try {
+      const res = await fetch("http://localhost:5000/api/documents/upload-masked", {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUploadedDocument(prev => ({ ...prev, [activeUploadId]: data.fileUrl }));
+        setMaskingStatus(prev => ({ ...prev, [activeUploadId]: 'success' }));
+      }
+    } catch (err) {
+      console.error(err);
+      setMaskingStatus(prev => ({ ...prev, [activeUploadId]: 'idle' }));
+    }
+
+    // Reset file input
+    e.target.value = null;
+  };
 
   function updateStatus(id, status) {
     setRequests((items) => items.map((item) => (item.id === id ? { ...item, status } : item)));
@@ -55,6 +112,8 @@ export default function ConsentRequests() {
 
   return (
     <div className="space-y-6">
+      <input type="file" ref={fileInputRef} className="hidden" accept=".pdf,image/*" onChange={handleFileChange} />
+
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -70,21 +129,19 @@ export default function ConsentRequests() {
       <div className="flex gap-2 border-b border-slate-200 dark:border-slate-800 pb-px">
         <button
           onClick={() => setActiveTab("received")}
-          className={`px-5 py-2.5 text-sm font-bold border-b-2 transition-colors ${
-            activeTab === "received" 
-              ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400" 
+          className={`px-5 py-2.5 text-sm font-bold border-b-2 transition-colors ${activeTab === "received"
+              ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"
               : "border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
-          }`}
+            }`}
         >
           Received Requests
         </button>
         <button
           onClick={() => setActiveTab("sent")}
-          className={`px-5 py-2.5 text-sm font-bold border-b-2 transition-colors ${
-            activeTab === "sent" 
-              ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400" 
+          className={`px-5 py-2.5 text-sm font-bold border-b-2 transition-colors ${activeTab === "sent"
+              ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"
               : "border-transparent text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
-          }`}
+            }`}
         >
           Sent Requests
         </button>
@@ -124,6 +181,8 @@ export default function ConsentRequests() {
             {requests.map((request) => {
               const riskLevel = getSensitivityRisk(request.sensitivity);
               const statusColor = getStatusColor(request.status);
+              const mStatus = maskingStatus[request.id];
+              const docReady = !!uploadedDocument[request.id];
 
               return (
                 <div
@@ -139,8 +198,8 @@ export default function ConsentRequests() {
                     <ColorBadge
                       status={
                         request.status === "Approved" ? "verified" :
-                        request.status === "Pending" ? "pending" :
-                        "disabled"
+                          request.status === "Pending" ? "pending" :
+                            "disabled"
                       }
                       size="sm"
                       className="text-white"
@@ -165,11 +224,44 @@ export default function ConsentRequests() {
                       </div>
                     </div>
 
+                    {/* Masking Options - Only for Pending status */}
+                    {request.status === "Pending" && (
+                      <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 bg-slate-50 dark:bg-slate-800/50">
+                        {docReady ? (
+                          <div className="flex items-center gap-3 text-emerald-600 dark:text-emerald-400 font-medium">
+                            <FileCheck size={20} />
+                            <span>Masked document ready for approval!</span>
+                          </div>
+                        ) : (
+                          <>
+                            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Prepare Document:</p>
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                onClick={() => handleAutoMask(request)}
+                                disabled={mStatus === 'loading'}
+                                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 px-4 py-2 font-medium text-white transition disabled:opacity-50"
+                              >
+                                {mStatus === 'loading' ? <Loader2 size={16} className="animate-spin" /> : <ShieldEllipsis size={16} />}
+                                Auto-Mask Document
+                              </button>
+                              <button
+                                onClick={() => handleUploadClick(request.id)}
+                                disabled={mStatus === 'loading'}
+                                className="inline-flex items-center gap-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 px-4 py-2 font-medium text-slate-700 dark:text-slate-300 transition disabled:opacity-50"
+                              >
+                                <Upload size={16} /> Upload Masked File
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+
                     {/* Action Buttons */}
                     <div className="flex flex-wrap gap-2 pt-3">
                       <button
                         onClick={() => updateStatus(request.id, "Approved")}
-                        disabled={request.status === "Approved"}
+                        disabled={request.status === "Approved" || (request.status === "Pending" && !docReady)}
                         className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-emerald-500 to-green-400 hover:from-emerald-600 hover:to-green-500 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 font-medium text-white transition"
                       >
                         <Check size={16} /> Approve
@@ -199,14 +291,14 @@ export default function ConsentRequests() {
         <div className="grid gap-6 lg:grid-cols-2">
           {sentRequests.map((request) => {
             const statusColor = getStatusColor(request.status);
-            
+
             return (
               <div
                 key={request.id}
                 className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden shadow-sm hover:shadow-md transition relative"
               >
                 <div className={`absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b ${statusColor.gradient}`}></div>
-                
+
                 <div className="p-5 pl-7 space-y-4">
                   <div className="flex justify-between items-start mb-2">
                     <div>
@@ -219,11 +311,11 @@ export default function ConsentRequests() {
                       {request.status}
                     </span>
                   </div>
-                  
+
                   <p className="text-sm text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700/50">
                     "{request.purpose}"
                   </p>
-                  
+
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <Info label="Sensitivity" value={request.sensitivity} />
                     <Info label="Duration" value={request.duration} />
@@ -232,13 +324,18 @@ export default function ConsentRequests() {
                     </div>
                   </div>
 
-                  {request.status === "Pending" && (
-                    <div className="pt-2 flex justify-end">
-                      <button className="text-sm font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300">
+                  <div className="pt-2 flex justify-between items-center">
+                    {request.status === "Approved" && request.maskedDocumentUrl && (
+                      <button className="inline-flex items-center gap-2 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 dark:hover:bg-emerald-900/50 px-4 py-2 text-sm font-semibold transition">
+                        <FileText size={16} /> View Document
+                      </button>
+                    )}
+                    {request.status === "Pending" && (
+                      <button className="text-sm font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 ml-auto">
                         Cancel Request
                       </button>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
             );

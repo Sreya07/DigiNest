@@ -3,7 +3,7 @@ import { AlertTriangle, CheckCircle2 } from "lucide-react";
 export default function PrivacyMeter({ riskLevel = 50, title = "Privacy Risk", description }) {
   // Determine color and icon based on risk level
   let riskColor, riskBg, riskIcon, riskLabel;
-  
+
   if (riskLevel <= 33) {
     riskColor = "bg-emerald-500";
     riskBg = "bg-emerald-50 dark:bg-emerald-950/30";
@@ -35,7 +35,7 @@ export default function PrivacyMeter({ riskLevel = 50, title = "Privacy Risk", d
 
       {/* Progress bar */}
       <div className="h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
-        <div 
+        <div
           className={`h-full rounded-full transition-all duration-300 ${riskColor}`}
           style={{ width: `${riskLevel}%` }}
         />

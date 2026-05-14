@@ -101,11 +101,10 @@ export default function Documents() {
             <button
               key={item}
               onClick={() => setCategory(item)}
-              className={`rounded-lg border p-3 text-left transition ${
-                isActive
+              className={`rounded-lg border p-3 text-left transition ${isActive
                   ? "border-blue-300 bg-blue-50 ring-2 ring-blue-100 dark:border-blue-800 dark:bg-blue-950/40 dark:ring-blue-950"
                   : "border-slate-200 bg-white hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700"
-              }`}
+                }`}
               type="button"
             >
               <div className="flex items-center gap-3">

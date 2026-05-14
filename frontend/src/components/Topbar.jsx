@@ -112,8 +112,7 @@ export default function Topbar() {
             key={to}
             to={to}
             className={({ isActive }) =>
-              `whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium ${
-                isActive ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-900 dark:text-slate-300"
+              `whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium ${isActive ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-900 dark:text-slate-300"
               }`
             }
           >

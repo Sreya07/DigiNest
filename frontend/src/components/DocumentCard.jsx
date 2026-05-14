@@ -44,34 +44,33 @@ export default function DocumentCard({ document }) {
         </div>
 
         <div className="flex items-center justify-between">
-          <ColorBadge 
+          <ColorBadge
             status={
               document.status === "Verified" ? "verified" :
-              document.status && document.status.includes("Expir") ? "expiring" :
-              "pending"
+                document.status && document.status.includes("Expir") ? "expiring" :
+                  "pending"
             }
             size="sm"
           />
           {document.sensitivity && (
-            <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
-              document.sensitivity === "High" 
+            <span className={`text-xs font-semibold px-2 py-1 rounded-full ${document.sensitivity === "High"
                 ? "bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300"
                 : "bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300"
-            }`}>
+              }`}>
               {document.sensitivity} Sensitivity
             </span>
           )}
         </div>
 
         <div className="grid grid-cols-2 gap-2 pt-2">
-          <Link 
-            to={`/documents/${document.id}`} 
+          <Link
+            to={`/documents/${document.id}`}
             className="rounded-lg bg-slate-900 px-3 py-2 text-center font-medium text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100"
           >
             View
           </Link>
-          <Link 
-            to={`/share/${document.id}`} 
+          <Link
+            to={`/share/${document.id}`}
             className="inline-flex items-center justify-center gap-1 rounded-lg bg-blue-50 px-3 py-2 font-medium text-blue-700 transition hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-200 dark:hover:bg-blue-900"
           >
             <Share2 size={15} /> Share
@@ -82,8 +81,8 @@ export default function DocumentCard({ document }) {
           >
             <Brain size={15} /> Map
           </Link>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="inline-flex items-center justify-center gap-1 rounded-lg bg-amber-50 px-3 py-2 font-medium text-amber-700 transition hover:bg-amber-100 dark:bg-amber-950 dark:text-amber-200 dark:hover:bg-amber-900"
           >
             <PenLine size={15} /> Correct

@@ -55,11 +55,10 @@ export default function Settings() {
                   key={lang.code}
                   type="button"
                   onClick={() => setLanguage(lang.code)}
-                  className={`rounded-lg px-4 py-2 font-medium transition ${
-                    language === lang.code
+                  className={`rounded-lg px-4 py-2 font-medium transition ${language === lang.code
                       ? "bg-blue-600 text-white"
                       : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                  }`}
+                    }`}
                 >
                   {lang.nativeLabel}
                 </button>
@@ -82,11 +81,10 @@ export default function Settings() {
                     key={mode.value}
                     type="button"
                     onClick={() => updateSetting("theme", mode.value)}
-                    className={`flex flex-col items-center gap-2 rounded-lg px-4 py-3 font-medium transition ${
-                      settings.theme === mode.value
+                    className={`flex flex-col items-center gap-2 rounded-lg px-4 py-3 font-medium transition ${settings.theme === mode.value
                         ? "bg-blue-600 text-white"
                         : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                    }`}
+                      }`}
                   >
                     <Icon size={20} />
                     <span className="text-xs">{mode.label}</span>
@@ -125,11 +123,10 @@ export default function Settings() {
               ].map((mode) => (
                 <label
                   key={mode.value}
-                  className={`flex cursor-pointer items-center gap-3 rounded-lg border-2 p-4 transition ${
-                    settings.interfaceMode === mode.value
+                  className={`flex cursor-pointer items-center gap-3 rounded-lg border-2 p-4 transition ${settings.interfaceMode === mode.value
                       ? "border-blue-500 bg-blue-50 dark:border-blue-500 dark:bg-blue-950/30"
                       : "border-slate-200 hover:border-slate-400 dark:border-slate-700 dark:hover:border-slate-600"
-                  }`}
+                    }`}
                 >
                   <input
                     type="radio"
@@ -282,11 +279,10 @@ function SettingGroup({ title, description, children }) {
 function RadioOption({ name, checked, onChange, title, description, active = false }) {
   return (
     <label
-      className={`flex cursor-pointer items-center gap-3 rounded-lg border-2 p-4 ${
-        active
+      className={`flex cursor-pointer items-center gap-3 rounded-lg border-2 p-4 ${active
           ? "border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/30"
           : "border-slate-200 bg-white hover:border-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-600"
-      }`}
+        }`}
     >
       <input type="radio" name={name} checked={checked} onChange={onChange} className="h-4 w-4" />
       <div>

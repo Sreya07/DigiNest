@@ -109,8 +109,8 @@ export default function AccessHistory() {
                   <ColorBadge
                     status={
                       item.status === "Active" ? "shared" :
-                      item.status === "Expired" ? "disabled" :
-                      "disabled"
+                        item.status === "Expired" ? "disabled" :
+                          "disabled"
                     }
                     size="sm"
                     className="text-white shrink-0"
